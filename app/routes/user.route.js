@@ -13,7 +13,9 @@ function init(router) {
     router.route('/user/:id')
         .get(getUserById)
         .delete(deleteUser)
-        .put(updateUser); 
+        .put(updateUser);
+    router.route('/user/:id/:auth')
+      .get(getUserByAuthId); 
 }
 
 function getAllUsers(req,res) {
@@ -27,17 +29,32 @@ function getAllUsers(req,res) {
 
 function getUserById(req,res) {
 
-  let userId = req.params;
+  let reqData = req.params;
 
-  var json_format = iValidator.json_schema(schema.getSchema,userId,"user");
+  var json_format = iValidator.json_schema(schema.getSchema,reqData,"user");
   if (json_format.valid == false) {
     return res.status(422).send(json_format.errorMessage);
   }
 
-  userService.getUserById(userId).then((data) => {
+  userService.getUserById(reqData.id).then((data) => {
       res.send(data);
     }).catch((err) => {
-      mail.mail(err);
+      res.send(err);
+    });
+}
+
+function getUserByAuthId(req,res) {
+
+  let reqData = req.params;
+  
+  var json_format = iValidator.json_schema(schema.getSchema,reqData,"user");
+  if (json_format.valid == false) {
+    return res.status(422).send(json_format.errorMessage);
+  }
+
+  userService.getUserByAuthId(reqData.auth).then((data) => {
+      res.send(data);
+    }).catch((err) => {
       res.send(err);
     });
 }

@@ -1,0 +1,28 @@
+{
+    "getSchema":{
+        "type": "object",
+        "required": [
+          "id"     
+        ],
+        "properties": {
+          "id" : {
+            "type": "string"
+          }
+        }
+     },
+    "postSchema":{
+        "type": "object",
+        "required": [
+            "storeDepartmentMapId",
+            "teamId"     
+        ],
+        "properties": {
+            "storeDepartmentMapId" : {
+            "type": "integer"
+            },
+            "teamId" : {
+                "type": "integer"
+            }
+        }
+    }
+}

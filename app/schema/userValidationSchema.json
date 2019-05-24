@@ -13,28 +13,52 @@
     "postSchema":{
         "type": "object",
         "required": [
-          "name"     
+          "firstName",
+          "lastName",
+          "password",
+          "storeId",
+          "roleId",
+          "positionId",
+          "weeklyHours",
+          "daysOff",
+          "recoveryHours"
         ],
         "properties": {
-          "name" : {
+          "firstName" : {
             "type": "string",
             "minLength": 1,
-            "maxLength": 10
+            "maxLength": 100
           },
-          "age" : {
-            "type" : "integer",
-            "minimum": 1,
-            "maximum": 150
-          },
-          "state":{
+          "lastName" : {
             "type": "string",
             "minLength": 1,
-            "maxLength": 10
+            "maxLength": 100
           },
-          "country": {
+          "password" : {
             "type": "string",
-            "minLength": 1,
-            "maxLength": 10
+            "minLenght": 1,
+            "maxLength":11
+          },
+          "storeId" : {
+            "type" : "integer"
+          },
+          "departmentId" : {
+            "type" : "integer"
+          },
+          "roleId" : {
+            "type" : "integer"
+          },
+          "positionId" : {
+            "type" : "integer"
+          },
+          "weeklyHours" : {
+            "type" : "integer"
+          },
+          "daysOff" : {
+            "type" : "integer"
+          },
+          "recoveryHours" : {
+            "type" : "integer"
           }
         }
      }

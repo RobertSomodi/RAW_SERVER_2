@@ -1,15 +1,17 @@
-var db = require('../../config/database');
-var dbFunc = require('../../config/db-function');
+const db = require('../../config/database');
+const dbFunc = require('../../config/db-function');
 const bcrypt = require('bcrypt');
 
+const tableName = 'authentications';
 var authenticModel = {
     authentic: authentic,
     signup: signup
 }
 
+
 function authentic(authenticData) {
     return new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM user WHERE username ='${authenticData.username}'`, (error, rows, fields) => {
+        db.query(`SELECT * FROM ${tableName} WHERE username ='${authenticData.username}'`, (error, rows, fields) => {
             if (error) {
                 reject(error);
             } else {
@@ -17,13 +19,12 @@ function authentic(authenticData) {
                     if (err) {
                         reject(error);
                     } else if (isMatch) {
-                        resolve(rows);
+                        resolve(rows[0]);
                     }
                     else {
                         reject({"success":false,"message":"password doesnot match"});
                     }
                 });
-
             }
         });
     });
@@ -42,7 +43,7 @@ function signup(user) {
                     return next(err);
                 }
                 user.password = hash;
-                db.query("SELECT * FROM user WHERE username='"+user.username+"'", (error, rows, fields) => {
+                db.query(`SELECT * FROM ${tableName} WHERE username='${user.username}'`, (error, rows, fields) => {
                     if (error) {
                         dbFunc.connectionRelease;
                         reject(error);
@@ -50,7 +51,7 @@ function signup(user) {
                         dbFunc.connectionRelease;
                         reject({"success":false,"message":"user already exist ! try with different user"});
                     } else {
-                        db.query("INSERT INTO user(username,password)VALUES('" + user.username + "','" + user.password + "')", (error, rows, fields) => {
+                        db.query(`INSERT INTO ${tableName}(username,password)VALUES('${user.username}','${user.password}')`, (error, rows, fields) => {
                             if (error) {
                                 dbFunc.connectionRelease;
                                 reject(error);

@@ -4,6 +4,7 @@ var userModel = require("../models/user-model.js");
 var userService = {
     getAllUser: getAllUser,
     getUserById:getUserById,
+    getUserByAuthId:getUserByAuthId,
     addUser: addUser,
     updateUser:updateUser,
     deleteUser:deleteUser
@@ -19,7 +20,6 @@ function addUser(userData) {
     })
    
 }
-
 
 function updateUser(id,userData,callback) {
     return new Promise((resolve,reject) => {
@@ -55,6 +55,16 @@ function getAllUser() {
 function getUserById(id) {
     return new Promise((resolve,reject) => {
         userModel.getUserById(id).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+}
+
+function getUserByAuthId(id) {
+    return new Promise((resolve, reject) => {
+        userModel.getUserByAuthId(id).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);

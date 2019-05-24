@@ -1,12 +1,15 @@
-var db = require('../../config/database');
-var dbFunc = require('../../config/db-function');
+const db = require('../../config/database');
+const dbFunc = require('../../config/db-function');
+const authenticModel = require('./authentic.model');
+const tableName='users';
 
-var userModel = {
+const userModel = {
    getAllUser:getAllUser,
    addUser:addUser,
    updateUser:updateUser,
    deleteUser:deleteUser,
-   getUserById:getUserById
+   getUserById:getUserById,
+   getUserByAuthId:getUserByAuthId
 }
 
 function getAllUser() {
@@ -25,7 +28,7 @@ function getAllUser() {
 
 function getUserById(id) {
     return new Promise((resolve,reject) => {
-        db.query("SELECT * FROM test WHERE id ="+id.id,(error,rows,fields)=>{
+        db.query(`SELECT * FROM ${tableName} WHERE id=${id}`,(error,rows,fields)=>{
             if(!!error) {
                 dbFunc.connectionRelease;
                 reject(error);
@@ -37,17 +40,41 @@ function getUserById(id) {
     });  
 }
 
-function addUser(user) {
-     return new Promise((resolve,reject) => {
-         db.query("INSERT INTO test(name,age,state,country)VALUES('"+user.name+"','"+user.age+"','"+user.state+"','"+user.country+"')",(error,rows,fields)=>{
-            if(error) {
+function getUserByAuthId(id) {
+    return new Promise((resolve,reject) => {
+        db.query(`SELECT * FROM ${tableName} WHERE authId=${id}`,(error,rows,fields)=>{
+            if(!!error) {
                 dbFunc.connectionRelease;
                 reject(error);
             } else {
                 dbFunc.connectionRelease;
-                resolve(rows);
+                resolve(rows[0]);
             }
-          });
+       });
+    }); 
+}
+
+function addUser(user) {
+     return new Promise((resolve,reject) => {
+        authenticModel.signup({username: user.firstName[0] + user.lastName, password: user.password}).
+            then(authenticated => {
+                if(authenticated.insertId) {
+                    db.query(`INSERT INTO ${tableName}(firstName,lastName,authId,storeId,departmentId,teamId,roleId,positionId,weeklyHours,daysOff,recoveryHours)VALUES('${user.firstName}','${user.lastName}','${authenticated.insertId}','${user.storeId}','${user.departmentId}','${user.teamId}','${user.roleId}','${user.positionId}','${user.weeklyHours}','${user.daysOff}','${user.recoveryHours}')`,
+                        (error,rows,fields)=>{
+                            if(error) {
+                                dbFunc.connectionRelease;
+                                reject(error);
+                            } else {
+                                dbFunc.connectionRelease;
+                                resolve(rows);
+                            }
+                    });
+                } else{
+                    reject(error);
+                }
+            }).catch(error => {
+                reject(error);
+            });
         });
 }
 
