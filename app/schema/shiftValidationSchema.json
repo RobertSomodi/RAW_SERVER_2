@@ -1,0 +1,44 @@
+{
+    "getSchema":{
+        "type": "object",
+        "required": [
+          "id"     
+        ],
+        "properties": {
+          "id" : {
+            "type": "string"
+          }
+        }
+     },
+    "postSchema":{
+        "type": "object",
+        "required": [
+            "name",
+            "color",
+            "off",
+            "startTime",
+            "endTime"     
+        ],
+        "properties": {
+            "name" : {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+            },
+            "color" : {
+              "type": "string",
+              "minLength": 1,
+              "maxLenght": 100
+            },
+            "off" : {
+              "type": "boolean"
+            },
+            "startTime" : {
+              "type": "string"
+            },
+            "endTime" : {
+              "type": "string"
+            }
+        }
+    }
+}
