@@ -4,7 +4,8 @@ const departmentTeamMapModel = require("../models/department-team-map-model.js")
 const departmentTeamMapService = {
     getDepartmentTeamMapById: getDepartmentTeamMapById,
     addDepartmentTeamMap: addDepartmentTeamMap,
-    deleteDepartmentTeamMap: deleteDepartmentTeamMap
+    deleteDepartmentTeamMap: deleteDepartmentTeamMap,
+    getTeamsByDepartmentId: getTeamsByDepartmentId
 }
 
 function addDepartmentTeamMap(departmentTeamMapData) {
@@ -31,6 +32,16 @@ function deleteDepartmentTeamMap(id) {
 function getDepartmentTeamMapById(id) {
     return new Promise((resolve,reject) => {
         departmentTeamMapModel.getDepartmentTeamMapById(id).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+}
+
+function getTeamsByDepartmentId(id) {
+    return new Promise((resolve,reject) => {
+        departmentTeamMapModel.getTeamsByDepartmentId(id).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);

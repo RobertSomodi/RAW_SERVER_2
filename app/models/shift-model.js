@@ -5,7 +5,22 @@ const tableName = 'shifts';
 let shiftModel = {
    getShiftById: getShiftById,
    addShift: addShift,
-   deleteShift: deleteShift
+   deleteShift: deleteShift,
+   getAll: getAll
+}
+
+function getAll() {
+    return new Promise((resolve,reject) => {
+        db.query(`SELECT * FROM ${tableName}`,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });
+    });  
 }
 
 function getShiftById(id) {

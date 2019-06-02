@@ -5,7 +5,23 @@ const tableName = 'positions';
 let positionModel = {
    getPositionById: getPositionById,
    addPosition: addPosition,
-   deletePosition: deletePosition
+   deletePosition: deletePosition,
+   getAll: getAll,
+   updatePosition: updatePosition
+}
+
+function getAll() {
+    return new Promise((resolve,reject) => {
+        db.query(`SELECT * FROM ${tableName}`,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });
+    });  
 }
 
 function getPositionById(id) {
@@ -50,6 +66,19 @@ function deletePosition(id) {
     });
 }
 
+function updatePosition(position) {
+    return new Promise((resolve,reject) => {
+        db.query(`UPDATE ${tableName} set name='${position.name}' WHERE id='${position.id}'`,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });    
+    })
+}
 
 module.exports = positionModel;
 

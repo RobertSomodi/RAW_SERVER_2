@@ -7,7 +7,22 @@ const tableName = 'storedepartmentmaps';
 let storeDepartmentMapModel = {
    getStoreDepartmentMapById: getStoreDepartmentMapById,
    addStoreDepartmentMap: addStoreDepartmentMap,
-   deleteStoreDepartmentMap: deleteStoreDepartmentMap
+   deleteStoreDepartmentMap: deleteStoreDepartmentMap,
+   getDepartmentsByStoreId: getDepartmentsByStoreId
+}
+
+function getDepartmentsByStoreId(id) {
+    return new Promise((resolve,reject) => {
+        db.query(`SELECT sd.id, d.name FROM ${tableName} sd INNER JOIN departments d ON sd.departmentId = d.id WHERE storeId ='${id}' `,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });
+    });  
 }
 
 function getStoreDepartmentMapById(id) {

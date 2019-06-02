@@ -7,7 +7,22 @@ const tableName = 'departmentteammaps';
 let departmentTeamMapModel = {
    getDepartmentTeamMapById: getDepartmentTeamMapById,
    addDepartmentTeamMap: addDepartmentTeamMap,
-   deleteDepartmentTeamMap: deleteDepartmentTeamMap
+   deleteDepartmentTeamMap: deleteDepartmentTeamMap,
+   getTeamsByDepartmentId: getTeamsByDepartmentId
+}
+
+function getTeamsByDepartmentId(id) {
+    return new Promise((resolve,reject) => {
+        db.query(`SELECT td.id, t.name FROM ${tableName} td INNER JOIN teams t ON td.teamId = t.id WHERE storeDepartmentMapId ='${id}' `,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });
+    });  
 }
 
 function getDepartmentTeamMapById(id) {

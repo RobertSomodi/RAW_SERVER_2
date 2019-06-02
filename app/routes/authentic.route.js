@@ -4,7 +4,7 @@ var iValidator = require('../../common/iValidator');
 var errorCode = require('../../common/error-code');
 var errorMessage = require('../../common/error-methods');
 var mail = require('./../../common/mailer.js');
-
+var userService = require('../services/user.service');
 
 const jwt = require('jsonwebtoken');
 
@@ -28,10 +28,12 @@ function authentic(req,res) {
    if(data) {
       var username = data.username;
       const token = jwt.sign({username},'my_secret_key',{ expiresIn: 60*60*24 });
-      res.json({
-        "success":true,
-        "data":data,
-        "token":token
+      userService.getUserByAuthId(data.id).then((userData) => {
+        res.json({
+          "success":true,
+          "data":userData,
+          "token":token
+        });
       });
     }
   }).catch((err) => {

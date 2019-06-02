@@ -9,6 +9,7 @@ function init(router) {
     router.route('/position/:id')
         .get(getPositionById)
         .delete(deletePosition)
+        .put(updatePosition)
 }
 
 function getPositionById(req,res) {
@@ -51,6 +52,16 @@ function deletePosition(req,res) {
     res.json(data);
   }).catch((err)=>{
       res.json(err);
+  });
+}
+
+function updatePosition(req,res) {
+  var positionData=req.body;
+  positionService.updatePosition(positionData).then((data)=>{
+     res.json(data);
+ }).catch((err)=>{
+     mail.mail(err);
+     res.json(err);
   });
 }
 

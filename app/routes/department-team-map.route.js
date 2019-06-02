@@ -8,7 +8,24 @@ function init(router) {
         .post(addDepartmentTeamMap);
     router.route('/departmentTeamMap/:id')
         .get(getDepartmentTeamMapById)
-        .delete(deleteDepartmentTeamMap)
+        .delete(deleteDepartmentTeamMap),
+    router.route('/departmentTeamMap/department/:id')
+        .get(getTeamsByDepartmentId)
+}
+
+function getTeamsByDepartmentId(req,res) {
+  let reqData = req.params;
+
+  var json_format = iValidator.json_schema(schema.getSchema,reqData,"departmentTeamMap");
+  if (json_format.valid == false) {
+    return res.status(422).send(json_format.errorMessage);
+  }
+
+  departmentTeamMapService.getTeamsByDepartmentId(reqData.id).then((data) => {
+      res.send(data);
+    }).catch((err) => {
+      res.send(err);
+    });
 }
 
 function getDepartmentTeamMapById(req,res) {

@@ -7,7 +7,8 @@ var userService = {
     getUserByAuthId:getUserByAuthId,
     addUser: addUser,
     updateUser:updateUser,
-    deleteUser:deleteUser
+    deleteUser:deleteUser,
+    getAllUsersByStoreIdDepartmentId: getAllUsersByStoreIdDepartmentId
 }
 
 function addUser(userData) {
@@ -21,9 +22,9 @@ function addUser(userData) {
    
 }
 
-function updateUser(id,userData,callback) {
+function updateUser(userData,callback) {
     return new Promise((resolve,reject) => {
-        userModel.updateUser(id,userData).then((data)=>{
+        userModel.updateUser(userData).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
@@ -45,6 +46,16 @@ function deleteUser(id) {
 function getAllUser() {
     return new Promise((resolve,reject) => {
         userModel.getAllUser().then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+}
+
+function getAllUsersByStoreIdDepartmentId(storeId, departmentId) {
+    return new Promise((resolve,reject) => {
+        userModel.getAllUsersByStoreIdDepartmentId(storeId, departmentId).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);

@@ -5,7 +5,22 @@ const tableName = 'departments';
 let departmentModel = {
    getDepartmentById: getDepartmentById,
    addDepartment: addDepartment,
-   deleteDepartment: deleteDepartment
+   deleteDepartment: deleteDepartment,
+   getAll: getAll
+}
+
+function getAll() {
+    return new Promise((resolve,reject) => {
+        db.query(`SELECT * FROM ${tableName}`,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });
+    });  
 }
 
 function getDepartmentById(id) {

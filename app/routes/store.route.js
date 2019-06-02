@@ -9,6 +9,7 @@ function init(router) {
     router.route('/store/:id')
         .get(getStoreById)
         .delete(deleteStore)
+        .put(updateStore)
 }
 
 function getStoreById(req,res) {
@@ -52,6 +53,15 @@ function deleteStore(req,res) {
   });
 }
 
+function updateStore(req,res) {
+  var storeData=req.body;
+  storeService.updateStore(storeData).then((data)=>{
+     res.json(data);
+ }).catch((err)=>{
+     mail.mail(err);
+     res.json(err);
+  });
+}
 
 module.exports.init = init;
 

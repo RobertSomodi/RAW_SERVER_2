@@ -10,6 +10,20 @@
          }
        }
     },
+    "getByStoreDepartmentSchema": {
+      "type": "object",
+      "required": [
+        "storeId"     
+      ],
+      "properties": {
+        "storeId" : {
+          "type": "string"
+        },
+        "departmentId" : {
+          "type": "string"
+        }
+      }
+    }, 
     "postSchema":{
         "type": "object",
         "required": [
@@ -20,8 +34,7 @@
           "roleId",
           "positionId",
           "weeklyHours",
-          "daysOff",
-          "recoveryHours"
+          "daysOff"
         ],
         "properties": {
           "firstName" : {
@@ -43,7 +56,10 @@
             "type" : "integer"
           },
           "departmentId" : {
-            "type" : "integer"
+            "type" : ["integer","null"]
+          },
+          "teamId" : {
+            "type": ["integer","null"]
           },
           "roleId" : {
             "type" : "integer"
@@ -55,9 +71,6 @@
             "type" : "integer"
           },
           "daysOff" : {
-            "type" : "integer"
-          },
-          "recoveryHours" : {
             "type" : "integer"
           }
         }

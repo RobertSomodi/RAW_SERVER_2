@@ -9,7 +9,8 @@ const userModel = {
    updateUser:updateUser,
    deleteUser:deleteUser,
    getUserById:getUserById,
-   getUserByAuthId:getUserByAuthId
+   getUserByAuthId:getUserByAuthId,
+   getAllUsersByStoreIdDepartmentId: getAllUsersByStoreIdDepartmentId
 }
 
 function getAllUser() {
@@ -26,6 +27,23 @@ function getAllUser() {
     });
 }
 
+function getAllUsersByStoreIdDepartmentId(storeId, departmentId) {
+    return new Promise((resolve,reject) => {
+        let filters = "";
+        filters += storeId ? `storeId=${storeId} ` : '';
+        filters += departmentId ? `AND departmentId=${departmentId} ` : '';
+        db.query(`SELECT * FROM ${tableName} WHERE ${filters}`,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });
+    });
+}
+
 function getUserById(id) {
     return new Promise((resolve,reject) => {
         db.query(`SELECT * FROM ${tableName} WHERE id=${id}`,(error,rows,fields)=>{
@@ -34,7 +52,7 @@ function getUserById(id) {
                 reject(error);
             } else {
                 dbFunc.connectionRelease;
-                resolve(rows);
+                resolve(rows[0]);
             }
        });
     });  
@@ -59,7 +77,9 @@ function addUser(user) {
         authenticModel.signup({username: user.firstName[0] + user.lastName, password: user.password}).
             then(authenticated => {
                 if(authenticated.insertId) {
-                    db.query(`INSERT INTO ${tableName}(firstName,lastName,authId,storeId,departmentId,teamId,roleId,positionId,weeklyHours,daysOff,recoveryHours)VALUES('${user.firstName}','${user.lastName}','${authenticated.insertId}','${user.storeId}','${user.departmentId}','${user.teamId}','${user.roleId}','${user.positionId}','${user.weeklyHours}','${user.daysOff}','${user.recoveryHours}')`,
+                    const teamId = user.teamId ? `'${user.teamId}'`: null;
+                    const departmentId = user.departmentId ? `'${user.departmentId}'`: null;
+                    db.query(`INSERT INTO ${tableName}(firstName,lastName,authId,storeId,departmentId,teamId,roleId,positionId,weeklyHours,daysOff)VALUES('${user.firstName}','${user.lastName}','${authenticated.insertId}','${user.storeId}',${departmentId},${teamId},'${user.roleId}','${user.positionId}','${user.weeklyHours}','${user.daysOff}')`,
                         (error,rows,fields)=>{
                             if(error) {
                                 dbFunc.connectionRelease;
@@ -78,10 +98,11 @@ function addUser(user) {
         });
 }
 
-
-function updateUser(id,user) {
+function updateUser(user) {
     return new Promise((resolve,reject) => {
-        db.query("UPDATE test set name='"+user.name+"',age='"+user.age+"',state='"+user.state+"',country='"+user.country+"' WHERE id='"+id+"'",(error,rows,fields)=>{
+        const teamId = user.teamId ? `'${user.teamId}'`: null;
+        const departmentId = user.departmentId ? `'${user.departmentId}'`: null;
+        db.query(`UPDATE ${tableName} set firstName='${user.firstName}',lastName='${user.lastName}',storeId='${user.storeId}',departmentId=${departmentId},teamId=${teamId},roleId='${user.roleId}',positionId='${user.positionId}',weeklyHours='${user.weeklyHours}',daysOff='${user.daysOff}',recoveryHours='${user.recoveryHours}' WHERE id='${user.id}'`,(error,rows,fields)=>{
             if(!!error) {
                 dbFunc.connectionRelease;
                 reject(error);
@@ -95,7 +116,7 @@ function updateUser(id,user) {
 
 function deleteUser(id) {
    return new Promise((resolve,reject) => {
-        db.query("DELETE FROM test WHERE id='"+id+"'",(error,rows,fields)=>{
+        db.query(`DELETE ${tableName}, authentications FROM ${tableName} INNER JOIN authentications ON ${tableName}.authId = authentications.id WHERE ${tableName}.id =${id}`,(error,rows,fields)=>{
             if(!!error) {
                 dbFunc.connectionRelease;
                 reject(error);

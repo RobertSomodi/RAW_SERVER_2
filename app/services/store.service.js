@@ -4,7 +4,8 @@ const storeModel = require("../models/store-model.js");
 const storeService = {
     getStoreById: getStoreById,
     addStore: addStore,
-    deleteStore: deleteStore
+    deleteStore: deleteStore,
+    updateStore: updateStore
 }
 
 function addStore(storeData) {
@@ -36,6 +37,17 @@ function getStoreById(id) {
             reject(err);
         })
     });
+}
+
+function updateStore(storeData,callback) {
+    return new Promise((resolve,reject) => {
+        storeModel.updateStore(storeData).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    })
+     
 }
 
 

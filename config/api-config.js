@@ -15,7 +15,10 @@ var RoleRoute = require('../app/routes/role.route');
 var PositionRoute = require('../app/routes/position.route');
 var StoreDepartmentMapRoute = require('../app/routes/store-department-map.route');
 var DepartmentTeamMapRoute = require('../app/routes/department-team-map.route');
+var ShiftRoute = require('../app/routes/shift.route');
+var ScheduleRoute = require('../app/routes/schedule.route');
 var AuthenticRoute = require('../app/routes/authentic.route');
+var InfoRoute = require('../app/routes/info.route');
 var errorCode = require('../common/error-code')
 var errorMessage = require('../common/error-methods')
 var checkToken = require('./secureRoute');
@@ -35,7 +38,7 @@ dbfunc.connectionCheck.then((data) =>{
  app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Token');
   next();
 });
 
@@ -79,5 +82,8 @@ RoleRoute.init(secureApi);
 PositionRoute.init(secureApi);
 StoreDepartmentMapRoute.init(secureApi);
 DepartmentTeamMapRoute.init(secureApi);
+ShiftRoute.init(secureApi);
+ScheduleRoute.init(secureApi);
+InfoRoute.init(secureApi);
 
 module.exports = ApiConfig;

@@ -1,0 +1,49 @@
+{
+    "getSchema":{
+        "type": "object",
+        "required": [
+          "id"     
+        ],
+        "properties": {
+          "id" : {
+            "type": "string"
+          }
+        }
+     },
+    "postSchema":{
+        "type": "object",
+        "required": [
+            "storeId",
+            "departmentId",
+            "shiftId",
+            "userId",
+            "date"    
+        ],
+        "properties": {
+            "storeId" : {
+                "type": "integer"
+            },
+            "departmentId" : {
+              "type": "integer"
+            },
+            "teamId" : {
+                "type": ["integer","null"]
+            },
+            "shiftId" : {
+                "type": "integer"
+            },
+            "userId" : {
+                "type": "integer"
+            },
+            "date" : {
+                "type": "string"
+            },
+            "checkin" : {
+                "type": ["string","null"]
+            },
+            "checkout" : {
+                "type": ["string","null"]
+            }
+        }
+    }
+}

@@ -4,7 +4,8 @@ const positionModel = require("../models/position-model.js");
 const positionService = {
     getPositionById: getPositionById,
     addPosition: addPosition,
-    deletePosition: deletePosition
+    deletePosition: deletePosition,
+    updatePosition: updatePosition
 }
 
 function addPosition(positionData) {
@@ -38,6 +39,16 @@ function getPositionById(id) {
     });
 }
 
+function updatePosition(positionData,callback) {
+    return new Promise((resolve,reject) => {
+        positionModel.updatePosition(positionData).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    })
+     
+}
 
 module.exports = positionService;
 

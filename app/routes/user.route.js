@@ -15,7 +15,9 @@ function init(router) {
         .delete(deleteUser)
         .put(updateUser);
     router.route('/user/:id/:auth')
-      .get(getUserByAuthId); 
+        .get(getUserByAuthId);
+    router.route('/user/all/:storeId/:departmentId')
+        .get(getAllUsersByStoreIdDepartmentId);   
 }
 
 function getAllUsers(req,res) {
@@ -26,6 +28,22 @@ function getAllUsers(req,res) {
       res.send(err);
     });
 }
+
+function getAllUsersByStoreIdDepartmentId(req,res) {
+  let reqData = req.params;
+  var json_format = iValidator.json_schema(schema.getByStoreDepartmentSchema,reqData,"user");
+  if (json_format.valid == false) {
+    return res.status(422).send(json_format.errorMessage);
+  }
+
+  userService.getAllUsersByStoreIdDepartmentId(reqData.storeId, reqData.departmentId).then((data) => {
+      res.send(data);
+    }).catch((err) => {
+      mail.mail(err);
+      res.send(err);
+    });
+}
+
 
 function getUserById(req,res) {
 
@@ -80,8 +98,7 @@ function addUser(req,res) {
 
 function updateUser(req,res) {
    var userData=req.body;
-   var id = req.params.id;
-   userService.updateUser(id,userData).then((data)=>{
+   userService.updateUser(userData).then((data)=>{
       res.json(data);
   }).catch((err)=>{
       mail.mail(err);
