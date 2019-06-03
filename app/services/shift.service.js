@@ -4,7 +4,8 @@ const shiftModel = require("../models/shift-model.js");
 const shiftService = {
     getShiftById: getShiftById,
     addShift: addShift,
-    deleteShift: deleteShift
+    deleteShift: deleteShift,
+    updateShift: updateShift
 }
 
 function addShift(shiftData) {
@@ -36,6 +37,17 @@ function getShiftById(id) {
             reject(err);
         })
     });
+}
+
+function updateShift(shiftData,callback) {
+    return new Promise((resolve,reject) => {
+        shiftModel.updateShift(shiftData).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    })
+     
 }
 
 

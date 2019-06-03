@@ -6,7 +6,8 @@ let shiftModel = {
    getShiftById: getShiftById,
    addShift: addShift,
    deleteShift: deleteShift,
-   getAll: getAll
+   getAll: getAll,
+   updateShift
 }
 
 function getAll() {
@@ -65,6 +66,19 @@ function deleteShift(id) {
     });
 }
 
+function updateShift(shift) {
+    return new Promise((resolve,reject) => {
+        db.query(`UPDATE ${tableName} set name='${shift.name}', color='${shift.color}', off='${shift.off}', startTime='${shift.startTime}', endTime='${shift.endTime}' WHERE id='${shift.id}'`,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });    
+    })
+}
 
 module.exports = shiftModel;
 

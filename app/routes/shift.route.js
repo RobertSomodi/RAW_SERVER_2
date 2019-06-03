@@ -9,6 +9,7 @@ function init(router) {
     router.route('/shift/:id')
         .get(getShiftById)
         .delete(deleteShift)
+        .put(updateShift)
 }
 
 function getShiftById(req,res) {
@@ -53,6 +54,17 @@ function deleteShift(req,res) {
       res.json(err);
   });
 }
+
+function updateShift(req,res) {
+  var shiftData=req.body;
+  shiftService.updateShift(shiftData).then((data)=>{
+     res.json(data);
+ }).catch((err)=>{
+     mail.mail(err);
+     res.json(err);
+  });
+}
+
 
 
 module.exports.init = init;

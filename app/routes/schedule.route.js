@@ -8,7 +8,11 @@ function init(router) {
         .post(addSchedule);
     router.route('/schedule/:id')
         .get(getScheduleById)
-        .delete(deleteSchedule)
+        .delete(deleteSchedule);
+    router.route('/schedule/:storeId/:departmentId/:startTime/:endTime')
+        .get(getSchedule);
+    router.route('/schedule/reports/shiftreport/:storeId/:departmentId/:startTime/:endTime')
+        .get(getShiftReport);
 }
 
 function getScheduleById(req,res) {
@@ -26,6 +30,28 @@ function getScheduleById(req,res) {
       res.send(err);
     });
 }
+
+function getSchedule(req,res) {
+
+    let reqData = req.params;
+  
+    scheduleService.getSchedule(reqData.storeId, reqData.departmentId, reqData.startTime, reqData.endTime).then((data) => {
+        res.send(data);
+      }).catch((err) => {
+        res.send(err);
+      });
+  }
+
+  function getShiftReport(req,res) {
+
+    let reqData = req.params;
+  
+    scheduleService.getShiftReport(reqData.storeId, reqData.departmentId, reqData.startTime, reqData.endTime).then((data) => {
+        res.send(data);
+      }).catch((err) => {
+        res.send(err);
+      });
+  }
 
 function addSchedule(req,res) {
   var scheduleData=req.body;

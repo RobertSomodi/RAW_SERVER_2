@@ -4,7 +4,8 @@ const teamModel = require("../models/team-model.js");
 const teamService = {
     getTeamById: getTeamById,
     addTeam: addTeam,
-    deleteTeam: deleteTeam
+    deleteTeam: deleteTeam,
+    updateTeam: updateTeam
 }
 
 function addTeam(teamData) {
@@ -38,6 +39,16 @@ function getTeamById(id) {
     });
 }
 
+function updateTeam(teamData,callback) {
+    return new Promise((resolve,reject) => {
+        teamModel.updateTeam(teamData).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    })
+     
+}
 
 module.exports = teamService;
 

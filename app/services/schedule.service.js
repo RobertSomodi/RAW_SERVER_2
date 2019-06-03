@@ -4,7 +4,9 @@ const scheduleModel = require("../models/schedule-model.js");
 const scheduleService = {
     getScheduleById: getScheduleById,
     addSchedule: addSchedule,
-    deleteSchedule: deleteSchedule
+    deleteSchedule: deleteSchedule,
+    getSchedule: getSchedule,
+    getShiftReport: getShiftReport
 }
 
 function addSchedule(scheduleData) {
@@ -31,6 +33,26 @@ function deleteSchedule(id) {
 function getScheduleById(id) {
     return new Promise((resolve,reject) => {
         scheduleModel.getScheduleById(id).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+}
+
+function getSchedule(storeId,departmentId,startTime,endTime) {
+    return new Promise((resolve,reject) => {
+        scheduleModel.getSchedule(storeId,departmentId,startTime,endTime).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+}
+
+function getShiftReport(storeId,departmentId,startTime,endTime) {
+    return new Promise((resolve,reject) => {
+        scheduleModel.getShiftReport(storeId,departmentId,startTime,endTime).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);

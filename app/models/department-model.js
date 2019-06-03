@@ -6,7 +6,8 @@ let departmentModel = {
    getDepartmentById: getDepartmentById,
    addDepartment: addDepartment,
    deleteDepartment: deleteDepartment,
-   getAll: getAll
+   getAll: getAll,
+   updateDepartment: updateDepartment
 }
 
 function getAll() {
@@ -65,6 +66,19 @@ function deleteDepartment(id) {
     });
 }
 
+function updateDepartment(department) {
+    return new Promise((resolve,reject) => {
+        db.query(`UPDATE ${tableName} set name='${department.name}' WHERE id='${department.id}'`,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });    
+    })
+}
 
 module.exports = departmentModel;
 

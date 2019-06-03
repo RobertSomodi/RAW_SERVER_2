@@ -9,6 +9,7 @@ function init(router) {
     router.route('/department/:id')
         .get(getDepartmentById)
         .delete(deleteDepartment)
+        .put(updateDepartment)
 }
 
 function getDepartmentById(req,res) {
@@ -51,6 +52,16 @@ function deleteDepartment(req,res) {
     res.json(data);
   }).catch((err)=>{
       res.json(err);
+  });
+}
+
+function updateDepartment(req,res) {
+  var departmentData=req.body;
+  departmentService.updateDepartment(departmentData).then((data)=>{
+     res.json(data);
+ }).catch((err)=>{
+     mail.mail(err);
+     res.json(err);
   });
 }
 

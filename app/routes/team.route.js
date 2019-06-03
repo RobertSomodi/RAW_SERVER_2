@@ -9,6 +9,7 @@ function init(router) {
     router.route('/team/:id')
         .get(getTeamById)
         .delete(deleteTeam)
+        .put(updateTeam)
 }
 
 function getTeamById(req,res) {
@@ -51,6 +52,16 @@ function deleteTeam(req,res) {
     res.json(data);
   }).catch((err)=>{
       res.json(err);
+  });
+}
+
+function updateTeam(req,res) {
+  var teamData=req.body;
+  teamService.updateTeam(teamData).then((data)=>{
+     res.json(data);
+ }).catch((err)=>{
+     mail.mail(err);
+     res.json(err);
   });
 }
 

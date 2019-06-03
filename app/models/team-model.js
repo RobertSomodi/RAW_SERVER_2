@@ -6,7 +6,8 @@ let teamModel = {
    getTeamById: getTeamById,
    addTeam: addTeam,
    deleteTeam: deleteTeam,
-   getAll: getAll
+   getAll: getAll,
+   updateTeam: updateTeam
 }
 
 function getAll() {
@@ -65,6 +66,19 @@ function deleteTeam(id) {
     });
 }
 
+function updateTeam(team) {
+    return new Promise((resolve,reject) => {
+        db.query(`UPDATE ${tableName} set name='${team.name}' WHERE id='${team.id}'`,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(rows);
+            }
+       });    
+    })
+}
 
 module.exports = teamModel;
 

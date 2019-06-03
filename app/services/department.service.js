@@ -4,7 +4,8 @@ const departmentModel = require("../models/department-model.js");
 const departmentService = {
     getDepartmentById: getDepartmentById,
     addDepartment: addDepartment,
-    deleteDepartment: deleteDepartment
+    deleteDepartment: deleteDepartment,
+    updateDepartment: updateDepartment
 }
 
 function addDepartment(departmentData) {
@@ -36,6 +37,17 @@ function getDepartmentById(id) {
             reject(err);
         })
     });
+}
+
+function updateDepartment(departmentData,callback) {
+    return new Promise((resolve,reject) => {
+        departmentModel.updateDepartment(departmentData).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    })
+     
 }
 
 
