@@ -8,7 +8,8 @@ let scheduleModel = {
    addSchedule: addSchedule,
    deleteSchedule: deleteSchedule,
    getSchedule:getSchedule,
-   getShiftReport: getShiftReport
+   getShiftReport: getShiftReport,
+   getClockingReport: getClockingReport
 }
 
 function getScheduleById(id) {
@@ -91,14 +92,98 @@ function getShiftReport(storeId, departmentId, startTime, endTime) {
                 reject(error);
             } else {
                 dbFunc.connectionRelease;
-                resolve(rows);
+                resolve(getShiftCount(rows, startTime, endTime));
             }
        });    
     });
 }
 
-function getShiftCount(schedule) {
-    
+function getClockingReport(storeId, departmentId, startTime, endTime) {
+    return new Promise((resolve,reject) => {
+        db.query(`SELECT s.date, s.checkin, s.checkout, u.firstName, u.lastName, u.id
+                FROM schedules s
+                INNER JOIN users u
+                ON u.id = s.userId`,(error,rows,fields)=>{
+            if(!!error) {
+                dbFunc.connectionRelease;
+                reject(error);
+            } else {
+                dbFunc.connectionRelease;
+                resolve(getClocking(rows, startTime, endTime));
+            }
+       });    
+    });
+}
+
+function getClocking(rows, startTime, endTime) {
+    let report = {days: Object.assign({},addDays(startTime,endTime)), rows: {}};
+    let daysKeys = Object.keys(report.days);
+
+    rows.forEach((row) => {
+        if(report.rows[row.id]) {
+            report.rows[row.id].data[daysKeys.indexOf(moment(row.date).format('YYYY-MM-DD'))+1] = {in: row.checkin, out:row.checkout}
+            if(row.checkin) {
+                report.rows[row.id].data[0].in += row.checkin;
+            }
+            if(row.checkout) {
+                report.rows[row.id].data[0].out += row.checkout;
+            }
+        } else {
+            let newData = [{in:0, out:0}];
+            daysKeys.forEach(day => {
+                newData.push(null);
+            });
+            report.rows[row.id] = {
+                firstName: row.firstName,
+                lastName: row.lastName,
+                data: newData
+            }
+
+            report.rows[row.id].data[daysKeys.indexOf(moment(row.date).format('YYYY-MM-DD'))+1] = {in: row.checkin, out:row.checkout}
+            if(row.checkin) {
+                report.rows[row.id].data[0].in += row.checkin;
+            }
+            if(row.checkout) {
+                report.rows[row.id].data[0].out += row.checkout;
+            }
+        }
+    });
+
+    return report;
+}
+
+function getShiftCount(rows, startTime, endTime) {
+    let report = addDays(startTime,endTime);
+    rows.forEach((row, index) => {
+        let date = moment(row.date).format('YYYY-MM-DD');
+        if(report[date].shifts) {
+            if(report[date].shifts[row.shiftId]){
+                report[date].shifts[row.shiftId] ++;
+            } else {
+                report[date].shifts[row.shiftId] = 1;
+            }
+        } else {
+            report[date].shifts = {}
+            report[date].shifts[row.shiftId] = 1;
+        }
+    });
+
+    Object.keys(report).forEach((key) => {
+        if(report[key].shifts) {
+            let totalCount = 0;
+            Object.keys(report[key].shifts).forEach((shift) => {
+                totalCount+=report[key].shifts[shift];
+            });
+            report[key].percent = Object.assign({}, report[key].shifts);
+
+            Object.keys(report[key].shifts).forEach((shift) => {
+                report[key].percent[shift] = (report[key].shifts[shift]/totalCount * 100).toFixed(2) + '%';
+            });
+        }
+        
+    });
+
+    return report;
 }
 
 function groupSchedule(schedules, startTime, endTime) {
@@ -181,7 +266,6 @@ function addDays(startTime, endTime) {
     for(i = startDay; i <= endDay; i++) {
         days[moment(`${yearMonth}-${i}`, 'YYYY-MM-DD').format('YYYY-MM-DD')] = {};
     };
-
     return days;
 }
 

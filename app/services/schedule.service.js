@@ -6,7 +6,8 @@ const scheduleService = {
     addSchedule: addSchedule,
     deleteSchedule: deleteSchedule,
     getSchedule: getSchedule,
-    getShiftReport: getShiftReport
+    getShiftReport: getShiftReport,
+    getClockingReport: getClockingReport
 }
 
 function addSchedule(scheduleData) {
@@ -53,6 +54,16 @@ function getSchedule(storeId,departmentId,startTime,endTime) {
 function getShiftReport(storeId,departmentId,startTime,endTime) {
     return new Promise((resolve,reject) => {
         scheduleModel.getShiftReport(storeId,departmentId,startTime,endTime).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+}
+
+function getClockingReport(storeId,departmentId,startTime,endTime) {
+    return new Promise((resolve,reject) => {
+        scheduleModel.getClockingReport(storeId,departmentId,startTime,endTime).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);

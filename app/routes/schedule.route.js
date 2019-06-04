@@ -13,6 +13,8 @@ function init(router) {
         .get(getSchedule);
     router.route('/schedule/reports/shiftreport/:storeId/:departmentId/:startTime/:endTime')
         .get(getShiftReport);
+    router.route('/schedule/reports/clockingreport/:storeId/:departmentId/:startTime/:endTime')
+    .get(getClockingReport);
 }
 
 function getScheduleById(req,res) {
@@ -31,6 +33,7 @@ function getScheduleById(req,res) {
     });
 }
 
+
 function getSchedule(req,res) {
 
     let reqData = req.params;
@@ -47,6 +50,17 @@ function getSchedule(req,res) {
     let reqData = req.params;
   
     scheduleService.getShiftReport(reqData.storeId, reqData.departmentId, reqData.startTime, reqData.endTime).then((data) => {
+        res.send(data);
+      }).catch((err) => {
+        res.send(err);
+      });
+  }
+
+  function getClockingReport(req,res) {
+
+    let reqData = req.params;
+  
+    scheduleService.getClockingReport(reqData.storeId, reqData.departmentId, reqData.startTime, reqData.endTime).then((data) => {
         res.send(data);
       }).catch((err) => {
         res.send(err);
