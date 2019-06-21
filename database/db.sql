@@ -180,7 +180,7 @@ CREATE TABLE `schedules` (
 
 LOCK TABLES `schedules` WRITE;
 /*!40000 ALTER TABLE `schedules` DISABLE KEYS */;
-INSERT INTO `schedules` VALUES (2,1,1,NULL,1,2,'2018-01-29',5,NULL),(3,1,1,1,2,7,'2018-01-30',-15,30),(4,1,1,1,3,7,'2018-01-28',20,-12),(5,1,1,1,3,7,'2018-01-31',20,0),(6,1,1,1,1,7,'2018-01-02',1,-5),(7,1,1,2,1,8,'2018-01-03',20,-45),(8,1,1,1,2,7,'2018-01-03',NULL,NULL);
+INSERT INTO `schedules` VALUES (2,1,1,NULL,1,2,'2018-01-29',5,NULL),(3,1,1,1,2,7,'2018-01-30',-15,30),(4,1,1,1,3,7,'2018-01-28',20,-12),(5,1,1,1,3,7,'2018-01-31',20,0),(6,1,1,1,1,7,'2018-01-02',1,-5),(7,1,1,2,1,8,'2018-01-03',20,-45),(8,1,1,1,2,7,'2018-01-03',0,10);
 /*!40000 ALTER TABLE `schedules` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -193,13 +193,13 @@ DROP TABLE IF EXISTS `shifts`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `shifts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `color` varchar(45) NOT NULL,
-  `off` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `color` varchar(100) NOT NULL,
+  `off` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `startTime` time NOT NULL,
   `endTime` time NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,7 +208,7 @@ CREATE TABLE `shifts` (
 
 LOCK TABLES `shifts` WRITE;
 /*!40000 ALTER TABLE `shifts` DISABLE KEYS */;
-INSERT INTO `shifts` VALUES (1,'Shift 1','#ff0000','false','08:00:00','15:00:00'),(2,'Shift 2','#006400','false','14:00:00','23:00:00'),(3,'Shift 3','#00008B','false','23:00:00','08:00:00');
+INSERT INTO `shifts` VALUES (1,'Shift 1','#ff0000','false','08:00:00','15:00:00'),(2,'Shift 2','#006400','false','14:00:00','23:00:00'),(3,'Shift 3','#00008B','false','23:00:00','08:00:00'),(4,'CM','#DDDDDD','true','00:00:00','00:00:00');
 /*!40000 ALTER TABLE `shifts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -345,4 +345,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-04  7:56:12
+-- Dump completed on 2019-06-22  1:03:49
