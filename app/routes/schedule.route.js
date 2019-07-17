@@ -9,6 +9,8 @@ function init(router) {
     router.route('/schedule/:id')
         .get(getScheduleById)
         .delete(deleteSchedule);
+    router.route('/schedule/saveSchedule')
+        .post(saveSchedule);
     router.route('/schedule/:storeId/:departmentId/:startTime/:endTime')
         .get(getSchedule);
     router.route('/schedule/reports/shiftreport/:storeId/:departmentId/:startTime/:endTime')
@@ -33,6 +35,15 @@ function getScheduleById(req,res) {
     });
 }
 
+function saveSchedule(req, res) {
+  var scheduleData=req.body;
+
+  scheduleService.saveSchedule(scheduleData).then((data) => {
+    res.json(data);
+  }).catch((err) => {
+    res.json(err);
+  });
+}
 
 function getSchedule(req,res) {
 

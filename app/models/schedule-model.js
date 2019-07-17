@@ -9,7 +9,8 @@ let scheduleModel = {
    deleteSchedule: deleteSchedule,
    getSchedule:getSchedule,
    getShiftReport: getShiftReport,
-   getClockingReport: getClockingReport
+   getClockingReport: getClockingReport,
+   saveSchedule: saveSchedule
 }
 
 function getScheduleById(id) {
@@ -24,6 +25,45 @@ function getScheduleById(id) {
             }
        });
     });  
+}
+
+function saveSchedule(schedule) {
+    return new Promise((resolve, reject) => {
+        let promises = [];
+        schedule.forEach(shift => {
+            promises.push(new Promise((resolveExists, rejectExists) => {
+                db.query(`SELECT * FROM ${tableName} s WHERE s.date='${shift.date}' AND s.userId=${shift.userId}`, (error,rows,fields) => {
+                    if(error) {
+                        rejectExists(error);
+                    } else {
+                        if(rows.length) {
+                            db.query(`UPDATE ${tableName} set shiftId=${shift.shiftId} WHERE id='${rows[0].id}'`,(error,addRows,fields)=>{
+                                if(!!error) {
+                                    rejectExists(error);
+                                } else {
+                                    resolveExists(addRows);
+                                }
+                           });  
+                        } else {
+                            addSchedule(shift).then((data) => {
+                                resolveExists(data);
+                            }).catch(error => {
+                                rejectExists(error);
+                            })
+                        }
+                    }
+                });
+            }));
+        });
+
+        Promise.all(promises).then(function(values) {
+            dbFunc.connectionRelease;
+            resolve(values);
+        }).catch(error => {   
+            dbFunc.connectionRelease;
+            reject(error);
+        })
+    });
 }
 
 function addSchedule(schedule) {
@@ -198,11 +238,13 @@ function groupSchedule(schedules, startTime, endTime) {
             if(!schedule.teams[sObj.teamId]) {
                 schedule.teams[sObj.teamId] = {
                     name: sObj.teamName,
+                    id: sObj.teamId,
                     users: {}
                 };
                 schedule.teams[sObj.teamId].users[sObj.userId] = {
                     firstName: sObj.firstName,
                     lastName: sObj.lastName,
+                    id: sObj.userId,
                     days: addDays(startTime,endTime)
                 };
                 schedule.teams[sObj.teamId].users[sObj.userId].days[moment(sObj.date).format('YYYY-MM-DD')] = {
@@ -221,6 +263,7 @@ function groupSchedule(schedules, startTime, endTime) {
                     schedule.teams[sObj.teamId].users[sObj.userId] = {
                         firstName: sObj.firstName,
                         lastName: sObj.lastName,
+                        id: sObj.userId,
                         days: addDays(startTime,endTime)
                     };
                     schedule.teams[sObj.teamId].users[sObj.userId].days[moment(sObj.date).format('YYYY-MM-DD')] = {
@@ -241,6 +284,7 @@ function groupSchedule(schedules, startTime, endTime) {
                 schedule.users[sObj.userId] = {
                     firstName: sObj.firstName,
                     lastName: sObj.lastName,
+                    id: sObj.userId,
                     days: {
 
                     }

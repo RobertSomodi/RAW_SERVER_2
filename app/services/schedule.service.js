@@ -7,12 +7,24 @@ const scheduleService = {
     deleteSchedule: deleteSchedule,
     getSchedule: getSchedule,
     getShiftReport: getShiftReport,
-    getClockingReport: getClockingReport
+    getClockingReport: getClockingReport,
+    saveSchedule: saveSchedule
 }
 
 function addSchedule(scheduleData) {
     return new Promise((resolve,reject) => {
         scheduleModel.addSchedule(scheduleData).then((data)=>{
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        })
+    })
+   
+}
+
+function saveSchedule(scheduleData) {
+    return new Promise((resolve,reject) => {
+        scheduleModel.saveSchedule(scheduleData).then((data)=>{
             resolve(data);
         }).catch((err) => {
             reject(err);
